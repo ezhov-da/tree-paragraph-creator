@@ -55,12 +55,12 @@ public class TreeParagraphRunner {
                     expandAllNodes(tree, 0, tree.getRowCount());
 
                     JSplitPane splitPane = new JSplitPane();
-                    splitPane.setLeftComponent(new JScrollPane(tree));
-                    splitPane.setRightComponent(new JScrollPane(textPane));
+                    splitPane.setLeftComponent(new JScrollPane(textPane));
+                    splitPane.setRightComponent(new JScrollPane(tree));
                     splitPane.setDividerLocation(0.5);
                     splitPane.setResizeWeight(0.5);
 
-                    JFrame frame = new JFrame("ПОСТРОЕНИЕ ДЕРЕВА ИЗ ПУНКТОВ");
+                    JFrame frame = new JFrame("BUILDING A TREE FROM ITEMS");
                     frame.add(splitPane);
                     frame.setSize(1000, 600);
                     frame.setLocationRelativeTo(null);

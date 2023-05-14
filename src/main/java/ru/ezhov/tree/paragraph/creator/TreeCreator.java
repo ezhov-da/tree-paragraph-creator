@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Создаем дерево из под пунктов
+ * Create a tree from items
  * <p>
  *
  * @author ezhov_da
@@ -19,15 +19,14 @@ import java.util.regex.Pattern;
 public class TreeCreator {
     private static final Logger LOG = Logger.getLogger(TreeCreator.class.getName());
 
-
     public DefaultMutableTreeNode createTree(String textParagraph) {
         if (textParagraph == null || "".equals(textParagraph)) {
-            return new DefaultMutableTreeNode("Необходимо указать текст");
+            return new DefaultMutableTreeNode("Text must be specified");
         }
 
         String[] textArray = textParagraph.split("\\n");
 
-        List<PreparedTreeObject> preparedTreeObjects = new ArrayList<PreparedTreeObject>();
+        List<PreparedTreeObject> preparedTreeObjects = new ArrayList();
 
         for (int i = 0; i < textArray.length; i++) {
             PreparedTreeObject preparedTreeObject = new PreparedTreeObject();
@@ -35,7 +34,7 @@ public class TreeCreator {
             String row = textArray[i];
             row = row.trim();
 
-            //ищем пункты
+            //looking for items
             Pattern pattern = Pattern.compile("^\\d*\\.(\\d*\\.?){0,100}");
             Matcher matcher = pattern.matcher(row);
             boolean find = matcher.find();
@@ -44,17 +43,19 @@ public class TreeCreator {
                 String group = matcher.group();
                 String[] arrayNumber = group.split("\\.");
 
-                LOG.log(Level.CONFIG, "строка:[{0}]\tнайдено совпадение:{1}\tкол-во точек=кол-ву уровня: {2}", new Object[]
-                        {
-                                row, find, arrayNumber.length
-                        });
+                LOG.log(
+                        Level.CONFIG,
+                        "line:[{0}]\tmatch found:{1}\tnumber of points=number of levels: {2}",
+                        new Object[]{row, find, arrayNumber.length}
+                );
                 preparedTreeObject.setLvl(arrayNumber.length);
                 preparedTreeObject.setParagraph(group);
             } else {
-                LOG.log(Level.CONFIG, "строка:[{0}]\tнайдено совпадение:{1}", new Object[]
-                        {
-                                row, find
-                        });
+                LOG.log(
+                        Level.CONFIG,
+                        "line:[{0}]\tmatch found:{1}",
+                        new Object[]{row, find}
+                );
             }
             preparedTreeObject.setFullText(row);
             preparedTreeObject.setFindParagraph(find);
@@ -63,8 +64,8 @@ public class TreeCreator {
         }
 
         DefaultMutableTreeNode defaultMutableTreeNodeRoot =
-                new DefaultMutableTreeNode("Тестовое дерево по пунктам");
-        Map<String, DefaultMutableTreeNode> map = new HashMap<String, DefaultMutableTreeNode>();
+                new DefaultMutableTreeNode("Test tree by points");
+        Map<String, DefaultMutableTreeNode> map = new HashMap<>();
 
         DefaultMutableTreeNode treeNodeLastAdd = null;
 
@@ -75,7 +76,7 @@ public class TreeCreator {
                         map.get(preparedTreeObject.getParentParagraph());
                 String fullText = preparedTreeObject.getFullText();
                 treeNodeLastAdd = new DefaultMutableTreeNode(fullText);
-                //если родитель не найден, тогда создаем новый и добавляем в корень
+                // if the parent is not found, then create a new one and add it to the root
                 if (mutableTreeNodeParenFromMap == null) {
                     defaultMutableTreeNodeRoot.add(treeNodeLastAdd);
                 } else {
